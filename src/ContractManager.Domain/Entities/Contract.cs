@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using ContractManager.Domain.Enums;
 
 namespace ContractManager.Domain.Entities
@@ -17,7 +18,11 @@ namespace ContractManager.Domain.Entities
             this.CreatedBy = createdBy;
 
         }
+
+        [Display(Name = "Cliente" )]
         public string ClientName { get; private set; }
+
+        [Display(Name = "Tipo")]
         public ETypeOfContract Type { get; private set; }
         public decimal QuantityTraded { get; private set; }
         public decimal NegotiatedValue { get; private set; }

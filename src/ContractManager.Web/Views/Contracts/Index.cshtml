@@ -1,89 +1,59 @@
 ﻿@model IEnumerable<ContractManager.Domain.Entities.Contract>
-
-@{
-    ViewData["Title"] = "Index";
+@section Head{
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
 }
+@{
+    ViewData["Title"] = "Contratos";
+}
+<h1>@ViewData["Title"]</h1>
 
-<h1>Index</h1>
+<div class="row">
+    <div class="form-group col text-right">
+        <a class="btn btn-primary pull-right" asp-area="" asp-controller="Contracts" asp-action="Create">Novo</a>
+    </div>
+</div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
+<table id="contratos" class="table table-hover">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.ClientName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Type)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.QuantityTraded)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NegotiatedValue)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.StartedAt)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Duration)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.File)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedBy)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DeletedAt)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedAt)
-            </th>
-            <th></th>
+            <th>@Html.DisplayNameFor(model => model.ClientName)</th>
+            <th>@Html.DisplayNameFor(model => model.Type)</th>
+            <th>@Html.DisplayNameFor(model => model.QuantityTraded)</th>
+            <th>@Html.DisplayNameFor(model => model.NegotiatedValue)</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ClientName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Type)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.QuantityTraded)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NegotiatedValue)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StartedAt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Duration)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.File)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedBy)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DeletedAt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedAt)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @if (Model != null && Model.Any())
+        {
+            @foreach (var item in Model)
+            {
+                <tr data-id="@item.Id">
+                    @*@Html.DisplayFor(modelItem => item.ClientName)*@
+                    <td>@item.ClientName</td>
+                    <td>@item.Type</td>
+                    <td>@item.QuantityTraded</td>
+                    <td>@item.NegotiatedValue</td>
+                </tr>
+            }
+        }
     </tbody>
 </table>
+
+@section Scripts{
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js">
+    </script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#contratos').DataTable({
+                "language": {
+                    "url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Portuguese-Brasil.json"
+                }
+            });
+
+            $('#contratos tbody').on('click', 'tr td:not(.dataTables_empty)', function () {
+                window.location.href = "/contracts/details/" + $(this).data("id");
+            });
+        });
+    </script>
+}
