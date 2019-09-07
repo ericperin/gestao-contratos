@@ -8,11 +8,11 @@ namespace ContractManager.Application.AutoMapper.Profiles
     {
         public EntityToCommandProfile()
         {
-            CreateMap<Contract, CreateContractCommand>()
+            CreateMap<Contract, FormContractCommand>()
                 .ReverseMap();
 
-            CreateMap<Contract, UpdateContractCommand>()
-                .ReverseMap();
+            //CreateMap<Contract, UpdateContractCommand>()
+            //    .ReverseMap();
         }
     }
 }

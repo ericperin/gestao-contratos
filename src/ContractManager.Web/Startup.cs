@@ -9,6 +9,7 @@ using ContractManager.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ContractManager.IoC;
+using ContractManager.Web.Extensions;
 
 namespace ContractManager.Web
 {
@@ -39,6 +40,8 @@ namespace ContractManager.Web
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddAutoMapperSetup();
+            services.AddMediatRSetup();
 
             NativeInjectorConfig.RegisterServices(services);
         }

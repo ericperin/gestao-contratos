@@ -6,6 +6,10 @@ using Microsoft.EntityFrameworkCore;
 using ContractManager.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using ContractManager.Domain.Interfaces.Repositories;
+using System.Security.Claims;
+using MediatR;
+using AutoMapper;
+using ContractManager.Domain.Commands.Contract;
 
 namespace ContractManager.Web.Controllers
 {
@@ -13,10 +17,16 @@ namespace ContractManager.Web.Controllers
     public class ContractsController : Controller
     {
         private readonly IContractRepository _repository;
+        private readonly IMediator _mediator;
+        private readonly IMapper _mapper;
 
-        public ContractsController(IContractRepository repository)
+        public ContractsController(IContractRepository repository,
+                              IMediator mediator,
+                              IMapper mapper)
         {
             _repository = repository;
+            _mediator = mediator;
+            _mapper = mapper;
         }
 
         public async Task<IActionResult> Index()
@@ -41,15 +51,16 @@ namespace ContractManager.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Contract contract)
+        public async Task<IActionResult> Create(FormContractCommand request)
         {
             if (ModelState.IsValid)
             {
-                contract.Id = Guid.NewGuid();
-                await _repository.Create(contract);
+                request.CreatedBy = new Guid(User.FindFirstValue(ClaimTypes.NameIdentifier));
+                var result = await _mediator.Send(request);
+
                 return RedirectToAction(nameof(Index));
             }
-            return View(contract);
+            return View(request);
         }
 
         // GET: Contracts/Edit/5

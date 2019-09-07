@@ -9,6 +9,7 @@ namespace ContractManager.Domain.Commands.Contract
 {
     public class ContractCommand : IRequest<Result>, ICommand
     {
+        public Guid Id { get; set; }
         public string ClientName { get; set; }
         public ETypeOfContract Type { get; set; }
         public decimal QuantityTraded { get; set; }
