@@ -19,13 +19,11 @@ namespace ContractManager.Web.Controllers
             _repository = repository;
         }
 
-        // GET: Contracts
         public async Task<IActionResult> Index()
         {
             return View(await _repository.FilterAsync());
         }
 
-        // GET: Contracts/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null) return NotFound();
@@ -36,18 +34,14 @@ namespace ContractManager.Web.Controllers
             return View(contract);
         }
 
-        // GET: Contracts/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Contracts/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ClientName,Type,QuantityTraded,NegotiatedValue,StartedAt,Duration,File,CreatedBy,Id,DeletedAt,CreatedAt")] Contract contract)
+        public async Task<IActionResult> Create(Contract contract)
         {
             if (ModelState.IsValid)
             {
@@ -69,12 +63,9 @@ namespace ContractManager.Web.Controllers
             return View(contract);
         }
 
-        // POST: Contracts/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("ClientName,Type,QuantityTraded,NegotiatedValue,StartedAt,Duration,File,CreatedBy,Id,DeletedAt,CreatedAt")] Contract contract)
+        public async Task<IActionResult> Edit(Guid id, Contract contract)
         {
             if (id != contract.Id)
             {
@@ -103,7 +94,6 @@ namespace ContractManager.Web.Controllers
             return View(contract);
         }
 
-        // GET: Contracts/Delete/5
         public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null) return NotFound();
@@ -117,7 +107,6 @@ namespace ContractManager.Web.Controllers
             return View(contract);
         }
 
-        // POST: Contracts/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
