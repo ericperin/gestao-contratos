@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ContractManager.Data\ContractManager.Data.csproj" />
+    <ProjectReference Include="..\ContractManager.IoC\ContractManager.IoC.csproj" />
   </ItemGroup>
 
 </Project>

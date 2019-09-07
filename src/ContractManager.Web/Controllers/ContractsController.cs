@@ -3,42 +3,35 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ContractManager.Data;
 using ContractManager.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
+using ContractManager.Data.Interfaces;
 
 namespace ContractManager.Web.Controllers
 {
     [Authorize]
     public class ContractsController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IContractRepository _repository;
 
-        public ContractsController(ApplicationDbContext context)
+        public ContractsController(IContractRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
         // GET: Contracts
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Contracts.ToListAsync());
+            return View(await _repository.FilterAsync());
         }
 
         // GET: Contracts/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
-            var contract = await _context.Contracts
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (contract == null)
-            {
-                return NotFound();
-            }
+            var contract = await _repository.GetById(id.Value);
+            if (contract == null) return NotFound();
 
             return View(contract);
         }
@@ -59,8 +52,7 @@ namespace ContractManager.Web.Controllers
             if (ModelState.IsValid)
             {
                 contract.Id = Guid.NewGuid();
-                _context.Add(contract);
-                await _context.SaveChangesAsync();
+                await _repository.Create(contract);
                 return RedirectToAction(nameof(Index));
             }
             return View(contract);
@@ -69,16 +61,11 @@ namespace ContractManager.Web.Controllers
         // GET: Contracts/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
-            var contract = await _context.Contracts.FindAsync(id);
-            if (contract == null)
-            {
-                return NotFound();
-            }
+            var contract = await _repository.GetById(id.Value);
+            if (contract == null) return NotFound();
+
             return View(contract);
         }
 
@@ -98,8 +85,7 @@ namespace ContractManager.Web.Controllers
             {
                 try
                 {
-                    _context.Update(contract);
-                    await _context.SaveChangesAsync();
+                    await _repository.Edit(contract);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -120,13 +106,9 @@ namespace ContractManager.Web.Controllers
         // GET: Contracts/Delete/5
         public async Task<IActionResult> Delete(Guid? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
-            var contract = await _context.Contracts
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var contract = await _repository.GetById(id.Value);
             if (contract == null)
             {
                 return NotFound();
@@ -140,15 +122,15 @@ namespace ContractManager.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var contract = await _context.Contracts.FindAsync(id);
-            _context.Contracts.Remove(contract);
-            await _context.SaveChangesAsync();
+            var contract = await _repository.GetById(id);
+            await _repository.Delete(contract);
+
             return RedirectToAction(nameof(Index));
         }
 
         private bool ContractExists(Guid id)
         {
-            return _context.Contracts.Any(e => e.Id == id);
+            return _repository.Filter(e => e.Id == id).Any();
         }
     }
 }

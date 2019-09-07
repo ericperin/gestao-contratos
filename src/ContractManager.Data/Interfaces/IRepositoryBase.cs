@@ -1,20 +1,19 @@
 ﻿using ContractManager.Domain.Entities;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ContractManager.Data.Interfaces
 {
     public interface IRepositoryBase<TEntity> where TEntity : IEntityBase
     {
-        void Create(TEntity entity);
-        void Delete(TEntity entity);
-        void Delete(Guid id);
-        void Edit(TEntity entity);
+        Task Create(TEntity entity);
+        Task Delete(TEntity entity);
+        Task Delete(Guid id);
+        Task Edit(TEntity entity);
 
-        TEntity GetById(Guid id);
-        IEnumerable<TEntity> Filter();
+        Task<TEntity> GetById(Guid id);
+        Task<IEnumerable<TEntity>> FilterAsync();
         IEnumerable<TEntity> Filter(Func<TEntity, bool> predicate);
-
-        void SaveChanges();
     }
 }

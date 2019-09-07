@@ -4,58 +4,62 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ContractManager.Data.Repositories
 {
-    public class RepositoryBase<TEntity> : IRepositoryBase<TEntity>
-        where TEntity : class, IEntityBase
+    public class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where TEntity : class, IEntityBase
     {
         private readonly ApplicationDbContext _context;
 
         public RepositoryBase(ApplicationDbContext context) => _context = context;
 
-        public virtual void Create(TEntity entity)
+        public virtual async Task Create(TEntity entity)
         {
             entity.CreatedAt = DateTime.UtcNow;
 
             _context.Set<TEntity>().Add(entity);
+            await _context.SaveChangesAsync();
         }
 
-        public void Delete(TEntity entity)
+        public async Task Delete(TEntity entity)
         {
             _context.Set<TEntity>().Remove(entity);
+            await _context.SaveChangesAsync();
         }
 
-        public void Delete(Guid id)
+        public async Task Delete(Guid id)
         {
             var entityToDelete = _context.Set<TEntity>().SingleOrDefault(e => e.Id == id);
             if (entityToDelete != null)
             {
                 _context.Set<TEntity>().Remove(entityToDelete);
             }
+
+            await _context.SaveChangesAsync();
         }
 
-        public void Edit(TEntity entity)
+        public async Task Edit(TEntity entity)
         {
             var editedEntity = _context.Set<TEntity>().SingleOrDefault(e => e.Id == entity.Id);
             editedEntity = entity;
+
+            await _context.SaveChangesAsync();
         }
 
-        public TEntity GetById(Guid id)
+        public async Task<TEntity> GetById(Guid id)
         {
-            return _context.Set<TEntity>().SingleOrDefault(e => e.Id == id);
+            return await _context.Set<TEntity>().SingleOrDefaultAsync(e => e.Id == id);
         }
 
-        public IEnumerable<TEntity> Filter()
+        public async Task<IEnumerable<TEntity>> FilterAsync()
         {
-            return _context.Set<TEntity>().AsNoTracking();
+            return await _context.Set<TEntity>().AsNoTracking().ToListAsync();
         }
 
         public IEnumerable<TEntity> Filter(Func<TEntity, bool> predicate)
         {
             return _context.Set<TEntity>().Where(predicate);
         }
-
-        public void SaveChanges() => _context.SaveChanges();
     }
 }
