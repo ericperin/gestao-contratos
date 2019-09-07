@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ContractManager.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
-using ContractManager.Data.Interfaces;
+using ContractManager.Domain.Interfaces.Repositories;
 
 namespace ContractManager.Web.Controllers
 {

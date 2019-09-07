@@ -1,5 +1,5 @@
-﻿using ContractManager.Data.Interfaces;
-using ContractManager.Data.Repositories;
+﻿using ContractManager.Data.Repositories;
+using ContractManager.Domain.Interfaces.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ContractManager.IoC

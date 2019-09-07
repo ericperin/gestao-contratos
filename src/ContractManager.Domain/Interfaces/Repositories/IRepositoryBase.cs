@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ContractManager.Data.Interfaces
+namespace ContractManager.Domain.Interfaces.Repositories
 {
     public interface IRepositoryBase<TEntity> where TEntity : IEntityBase
     {

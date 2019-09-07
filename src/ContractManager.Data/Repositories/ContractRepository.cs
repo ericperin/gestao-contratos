@@ -1,5 +1,5 @@
-﻿using ContractManager.Data.Interfaces;
-using ContractManager.Domain.Entities;
+﻿using ContractManager.Domain.Entities;
+using ContractManager.Domain.Interfaces.Repositories;
 
 namespace ContractManager.Data.Repositories
 {
