@@ -51,8 +51,11 @@
                 }
             });
 
-            $('#contratos tbody').on('click', 'tr td:not(.dataTables_empty)', function () {
-                window.location.href = "/contracts/details/" + $(this).data("id");
+            $('#contratos tbody').on('click', 'tr', function () {
+                let id = $(this).data("id");
+                if (id !== undefined) {
+                    window.location.href = "/contracts/details/" + id;
+                }
             });
         });
     </script>

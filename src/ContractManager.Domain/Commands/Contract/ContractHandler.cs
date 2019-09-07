@@ -9,7 +9,8 @@ using MediatR;
 
 namespace ContractManager.Domain.Commands.Contract
 {
-    public class ContractHandler : IRequestHandler<FormContractCommand, Result>,
+    public class ContractHandler : IRequestHandler<CreateContractCommand, Result>,
+                           IRequestHandler<UpdateContractCommand, Result>,
                            IRequestHandler<DeleteContractCommand, Result>
     {
         private readonly IMediator _mediator;
@@ -25,7 +26,7 @@ namespace ContractManager.Domain.Commands.Contract
         private IEnumerable<string> GetErrors(ContractCommand request) =>
             request.ValidationResult.Errors.Select(err => err.ErrorMessage);
 
-        public async Task<Result> Handle(FormContractCommand request, CancellationToken cancellationToken)
+        public async Task<Result> Handle(CreateContractCommand request, CancellationToken cancellationToken)
         {
             var result = new Result();
 
@@ -47,6 +48,34 @@ namespace ContractManager.Domain.Commands.Contract
             }
             return result;
         }
+
+        public async Task<Result> Handle(UpdateContractCommand request, CancellationToken cancellationToken)
+        {
+            var result = new Result();
+
+            if (request.IsValid())
+            {
+                var contract = await _ContractRepository.GetById(request.Id);
+                if (contract != null)
+                {
+                    contract.Update(request.ClientName, request.Type, request.QuantityTraded, request.NegotiatedValue, request.StartedAt, request.Duration, request.File);
+                    await _ContractRepository.Edit(contract);
+                }
+                else
+                {
+                    var message = "The contract cannot be found.";
+                    await _mediator.Publish(new Notification(message), cancellationToken);
+                    result.AddError(message);
+                }
+            }
+            else
+            {
+                await _mediator.Publish(new Notification(request.ValidationResult), cancellationToken);
+                result.AddErrors(GetErrors(request));
+            }
+            return result;
+        }
+
 
         public async Task<Result> Handle(DeleteContractCommand request, CancellationToken cancellationToken)
         {

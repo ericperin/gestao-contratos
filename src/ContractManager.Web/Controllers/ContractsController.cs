@@ -10,6 +10,7 @@ using System.Security.Claims;
 using MediatR;
 using AutoMapper;
 using ContractManager.Domain.Commands.Contract;
+using ContractManager.Domain;
 
 namespace ContractManager.Web.Controllers
 {
@@ -51,19 +52,18 @@ namespace ContractManager.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(FormContractCommand request)
+        public async Task<IActionResult> Create(CreateContractCommand request)
         {
             if (ModelState.IsValid)
             {
                 request.CreatedBy = new Guid(User.FindFirstValue(ClaimTypes.NameIdentifier));
                 var result = await _mediator.Send(request);
 
-                return RedirectToAction(nameof(Index));
+                return Result(request, result);
             }
             return View(request);
         }
 
-        // GET: Contracts/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null) return NotFound();
@@ -71,66 +71,45 @@ namespace ContractManager.Web.Controllers
             var contract = await _repository.GetById(id.Value);
             if (contract == null) return NotFound();
 
-            return View(contract);
+            var command = _mapper.Map<UpdateContractCommand>(contract);
+            return View(command);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, Contract contract)
+        public async Task<IActionResult> Edit(Guid id, UpdateContractCommand request)
         {
-            if (id != contract.Id)
-            {
-                return NotFound();
-            }
+            if (id != request.Id) return NotFound();
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    await _repository.Edit(contract);
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ContractExists(contract.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                var result = await _mediator.Send(request);
+
+                return Result(request, result);
             }
-            return View(contract);
-        }
-
-        public async Task<IActionResult> Delete(Guid? id)
-        {
-            if (id == null) return NotFound();
-
-            var contract = await _repository.GetById(id.Value);
-            if (contract == null)
-            {
-                return NotFound();
-            }
-
-            return View(contract);
+            return View(request);
         }
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var contract = await _repository.GetById(id);
-            await _repository.Delete(contract);
+            var request = new DeleteContractCommand(id);
+            var result = await _mediator.Send(request);
 
-            return RedirectToAction(nameof(Index));
+            if (!result.HasErrors) return BadRequest(string.Join(", ", result.Errors));
+
+            return Ok();
         }
 
-        private bool ContractExists(Guid id)
+        private IActionResult Result(ContractCommand request, Result result)
         {
-            return _repository.Filter(e => e.Id == id).Any();
+            if (result.HasErrors)
+            {
+                result.Errors.ToList().ForEach(err => ModelState.AddModelError(string.Empty, err));
+                return View(request);
+            }
+            return RedirectToAction(nameof(Index));
         }
     }
 }

@@ -17,7 +17,6 @@ namespace ContractManager.Domain.Entities
             this.Duration = duration;
             this.File = file;
             this.CreatedBy = createdBy;
-
         }
 
         [Display(Name = "Cliente")]
@@ -42,5 +41,16 @@ namespace ContractManager.Domain.Entities
         public string File { get; private set; }
 
         public Guid CreatedBy { get; private set; }
+
+        public void Update(string clientName, ETypeOfContract type, decimal quantityTraded, decimal negotiatedValue, DateTime startedAt, int duration, string file)
+        {
+            this.ClientName = clientName;
+            this.Type = type;
+            this.QuantityTraded = quantityTraded;
+            this.NegotiatedValue = negotiatedValue;
+            this.StartedAt = startedAt;
+            this.Duration = duration;
+            this.File = file;
+        }
     }
 }

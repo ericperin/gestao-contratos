@@ -61,6 +61,7 @@ namespace ContractManager.Web
                 app.UseHsts();
             }
 
+            app.UseRequestLocalizationFromBrazil();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();

@@ -3,10 +3,10 @@ using System;
 
 namespace ContractManager.Domain.Commands.Contract
 {
-    public class FormContractCommand : ContractCommand
+    public class CreateContractCommand : ContractCommand
     {
-        public FormContractCommand() { }
-        public FormContractCommand(string clientName, ETypeOfContract type, decimal quantityTraded, decimal negotiatedValue, DateTime startedAt, int duration, string file, Guid createdBy)
+        public CreateContractCommand() { }
+        public CreateContractCommand(string clientName, ETypeOfContract type, decimal quantityTraded, decimal negotiatedValue, DateTime startedAt, int duration, string file, Guid createdBy)
         {
             ClientName = clientName;
             Type = type;
