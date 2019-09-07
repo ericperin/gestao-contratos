@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using ContractManager.Domain.Entities;
 using ContractManager.Domain.Interfaces.Repositories;
 using ContractManager.Domain.Notifications;
 using MediatR;
@@ -58,7 +57,14 @@ namespace ContractManager.Domain.Commands.Contract
                 var contract = await _ContractRepository.GetById(request.Id);
                 if (contract != null)
                 {
-                    contract.Update(request.ClientName, request.Type, request.QuantityTraded, request.NegotiatedValue, request.StartedAt, request.Duration, request.File);
+                    contract.Update(request.ClientName,
+                        request.Type,
+                        request.QuantityTraded,
+                        request.NegotiatedValue,
+                        request.StartedAt,
+                        request.Duration,
+                        request.File);
+
                     await _ContractRepository.Edit(contract);
                 }
                 else

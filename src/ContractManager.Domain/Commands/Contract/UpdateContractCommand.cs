@@ -6,7 +6,7 @@ namespace ContractManager.Domain.Commands.Contract
     public class UpdateContractCommand : ContractCommand
     {
         public UpdateContractCommand() { }
-        public UpdateContractCommand(string clientName, ETypeOfContract type, decimal quantityTraded, decimal negotiatedValue, DateTime startedAt, int duration, string file)
+        public UpdateContractCommand(string clientName, ETypeOfContract type, decimal quantityTraded, decimal negotiatedValue, DateTime startedAt, int duration, byte[] file)
         {
             ClientName = clientName;
             Type = type;

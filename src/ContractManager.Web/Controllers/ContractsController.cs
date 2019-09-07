@@ -2,8 +2,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using ContractManager.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using ContractManager.Domain.Interfaces.Repositories;
 using System.Security.Claims;
@@ -11,6 +9,8 @@ using MediatR;
 using AutoMapper;
 using ContractManager.Domain.Commands.Contract;
 using ContractManager.Domain;
+using System.IO;
+using Microsoft.AspNetCore.Http;
 
 namespace ContractManager.Web.Controllers
 {
@@ -52,11 +52,17 @@ namespace ContractManager.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CreateContractCommand request)
+        public async Task<IActionResult> Create(CreateContractCommand request, IFormFile pdf)
         {
             if (ModelState.IsValid)
             {
+                using (var memoryStream = new MemoryStream())
+                {
+                    await pdf.CopyToAsync(memoryStream);
+                    request.File = memoryStream.ToArray();
+                }
                 request.CreatedBy = new Guid(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
                 var result = await _mediator.Send(request);
 
                 return Result(request, result);
@@ -97,9 +103,16 @@ namespace ContractManager.Web.Controllers
             var request = new DeleteContractCommand(id);
             var result = await _mediator.Send(request);
 
-            if (!result.HasErrors) return BadRequest(string.Join(", ", result.Errors));
+            if (result.HasErrors) return BadRequest(string.Join(", ", result.Errors));
 
             return Ok();
+        }
+
+        public async Task<ActionResult> PDF(Guid id)
+        {
+            var contract = await _repository.GetById(id);
+
+            return new FileContentResult(contract.File, "application/pdf");
         }
 
         private IActionResult Result(ContractCommand request, Result result)

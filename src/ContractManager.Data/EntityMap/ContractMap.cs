@@ -16,7 +16,7 @@ namespace ContractManager.Data.EntityMap
             builder.Property(x => x.NegotiatedValue).IsRequired();
             builder.Property(x => x.StartedAt).IsRequired();
             builder.Property(x => x.Duration).IsRequired();
-            builder.Property(x => x.File);
+            builder.Property(x => x.File).IsRequired();
 
             builder.Property(x => x.CreatedAt).IsRequired();
             builder.Property(x => x.DeletedAt);

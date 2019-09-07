@@ -1,5 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
+using System.Threading.Tasks;
 using ContractManager.Domain.Enums;
 
 namespace ContractManager.Domain.Entities
@@ -7,7 +9,7 @@ namespace ContractManager.Domain.Entities
     public class Contract : EntityBase
     {
         public Contract() { } //TODO: Remove...
-        public Contract(string clientName, ETypeOfContract type, decimal quantityTraded, decimal negotiatedValue, DateTime startedAt, int duration, string file, Guid createdBy)
+        public Contract(string clientName, ETypeOfContract type, decimal quantityTraded, decimal negotiatedValue, DateTime startedAt, int duration, byte[] file, Guid createdBy)
         {
             this.ClientName = clientName;
             this.Type = type;
@@ -38,11 +40,11 @@ namespace ContractManager.Domain.Entities
         public int Duration { get; private set; }
 
         [Display(Name = "Arquivo PDF com o contrato")]
-        public string File { get; private set; }
+        public byte[] File { get; private set; }
 
         public Guid CreatedBy { get; private set; }
 
-        public void Update(string clientName, ETypeOfContract type, decimal quantityTraded, decimal negotiatedValue, DateTime startedAt, int duration, string file)
+        public void Update(string clientName, ETypeOfContract type, decimal quantityTraded, decimal negotiatedValue, DateTime startedAt, int duration, byte[] file)
         {
             this.ClientName = clientName;
             this.Type = type;
