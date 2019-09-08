@@ -44,7 +44,7 @@
             @Html.DisplayNameFor(model => model.StartedAt)
         </dt>
         <dd class="col-sm-9">
-            @Html.DisplayFor(model => model.StartedAt)
+            @Model.StartedAt.ToString("MM/yyyy")
         </dd>
         <dt class="col-sm-3">
             @Html.DisplayNameFor(model => model.Duration)
@@ -68,7 +68,7 @@
             @Html.DisplayNameFor(model => model.CreatedAt)
         </dt>
         <dd class="col-sm-9">
-            @Html.DisplayFor(model => model.CreatedAt)
+            @Model.CreatedAt.ToLocalTime()
         </dd>
     </dl>
 </div>

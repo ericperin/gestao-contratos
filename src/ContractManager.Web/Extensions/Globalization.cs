@@ -8,7 +8,7 @@ namespace ContractManager.Web.Extensions
     {
         public static void UseRequestLocalizationFromBrazil(this IApplicationBuilder app)
         {
-            var supportedCultures = new[] { new CultureInfo("pt-BR"), new CultureInfo("en-US") };
+            var supportedCultures = new[] { new CultureInfo("pt-BR") };
             app.UseRequestLocalization(new RequestLocalizationOptions
             {
                 DefaultRequestCulture = new RequestCulture("pt-BR"),
