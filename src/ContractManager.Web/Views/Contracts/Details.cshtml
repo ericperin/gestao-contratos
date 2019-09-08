@@ -11,8 +11,8 @@
     <div class="row">
         <div class="form-group col text-right">
             <a class="btn btn-primary" asp-area="" asp-controller="Contracts" asp-action="Edit"
-               asp-route-id="@Model.Id">Editar</a>
-            <button type="button" class="btn btn-danger delete" data-id="@Model.Id">Remover</button>
+               asp-route-id="@Model.Id"><i class="fas fa-edit"></i> Editar</a>
+            <button type="button" class="btn btn-danger delete" data-id="@Model.Id"><i class="fas fa-trash-alt"></i> Remover</button>
         </div>
     </div>
     <dl class="row">
@@ -71,15 +71,19 @@
     <script type="text/javascript">
         $(function () {
             $(".delete").click(function () {
-                $.ajax({
-                    url: "/contracts/delete/" + $(this).data("id"),
-                    type: "POST",
-                    beforeSend: function (request) {
-                        request.setRequestHeader("RequestVerificationToken", $("[name='__RequestVerificationToken']").val());
-                    },
-                    success: function (result) {
-                        bootbox.alert(result, function () {
-                            window.location.href = "/contracts";
+                bootbox.confirm("Tem certeza que deseja remover este contrato?", function (ok) {
+                    if (ok) {
+                        $.ajax({
+                            url: "/contracts/delete/" + $(this).data("id"),
+                            type: "POST",
+                            beforeSend: function (request) {
+                                request.setRequestHeader("RequestVerificationToken", $("[name='__RequestVerificationToken']").val());
+                            },
+                            success: function (result) {
+                                bootbox.alert(result, function () {
+                                    window.location.href = "/contracts";
+                                });
+                            }
                         });
                     }
                 });

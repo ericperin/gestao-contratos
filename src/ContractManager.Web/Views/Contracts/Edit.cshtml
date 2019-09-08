@@ -59,14 +59,16 @@
                 <label class="custom-file-label" for="pdf"></label>
             </div>
             <div class="btn-group" role="group" id="showFile">
-                <a target="_blank" class="btn btn-secondary" asp-action="PDF" asp-route-id="@Model.Id">Visualizar</a>
-                <button type="button" class="btn btn-secondary">X</button>
+                <a target="_blank" class="btn btn-secondary" asp-action="PDF" asp-route-id="@Model.Id"><i class="fas fa-file-pdf"></i> Visualizar</a>
+                <button type="button" class="btn btn-danger"><i class="fas fa-times"></i></button>
             </div>
             <span asp-validation-for="File" class="text-danger"></span>
         </div>
     </div>
-    <div class="form-group">
-        <input type="submit" value="Alterar" class="btn btn-primary" />
+    <div class="row">
+        <div class="form-group col-md-12 text-right">
+            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Alterar</button>
+        </div>
     </div>
 </form>
 
