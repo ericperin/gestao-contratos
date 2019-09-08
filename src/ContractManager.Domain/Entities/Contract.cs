@@ -44,6 +44,8 @@ namespace ContractManager.Domain.Entities
 
         public Guid CreatedBy { get; private set; }
 
+        public DateTime FinishedAt => StartedAt.AddMonths(Duration);
+
         public void Update(string clientName, ETypeOfContract type, decimal quantityTraded, decimal negotiatedValue, DateTime startedAt, int duration, byte[] file)
         {
             this.ClientName = clientName;

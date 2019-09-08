@@ -26,6 +26,7 @@ namespace ContractManager.Domain.Commands.Contract
 
         [Display(Name = "Mês/Ano do ínicio do contrato")]
         public DateTime StartedAt { get; set; }
+        public DateTime FinishedAt => StartedAt.AddMonths(Duration);
 
         [Display(Name = "Duração em meses do contrato")]
         public int Duration { get; set; }
