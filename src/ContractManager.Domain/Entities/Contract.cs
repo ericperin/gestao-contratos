@@ -1,24 +1,21 @@
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.IO;
-using System.Threading.Tasks;
 using ContractManager.Domain.Enums;
 
 namespace ContractManager.Domain.Entities
 {
     public class Contract : EntityBase
     {
-        public Contract() { } //TODO: Remove...
         public Contract(string clientName, ETypeOfContract type, decimal quantityTraded, decimal negotiatedValue, DateTime startedAt, int duration, byte[] file, Guid createdBy)
         {
-            this.ClientName = clientName;
-            this.Type = type;
-            this.QuantityTraded = quantityTraded;
-            this.NegotiatedValue = negotiatedValue;
-            this.StartedAt = startedAt;
-            this.Duration = duration;
-            this.File = file;
-            this.CreatedBy = createdBy;
+            ClientName = clientName;
+            Type = type;
+            QuantityTraded = quantityTraded;
+            NegotiatedValue = negotiatedValue;
+            StartedAt = startedAt;
+            Duration = duration;
+            File = file;
+            CreatedBy = createdBy;
         }
 
         [Display(Name = "Cliente")]
@@ -48,13 +45,13 @@ namespace ContractManager.Domain.Entities
 
         public void Update(string clientName, ETypeOfContract type, decimal quantityTraded, decimal negotiatedValue, DateTime startedAt, int duration, byte[] file)
         {
-            this.ClientName = clientName;
-            this.Type = type;
-            this.QuantityTraded = quantityTraded;
-            this.NegotiatedValue = negotiatedValue;
-            this.StartedAt = startedAt;
-            this.Duration = duration;
-            this.File = file;
+            ClientName = clientName;
+            Type = type;
+            QuantityTraded = quantityTraded;
+            NegotiatedValue = negotiatedValue;
+            StartedAt = startedAt;
+            Duration = duration;
+            File = file;
         }
     }
 }
