@@ -31,8 +31,8 @@
                     @*@Html.DisplayFor(modelItem => item.ClientName)*@
                     <td>@item.ClientName</td>
                     <td>@item.Type</td>
-                    <td>@item.QuantityTraded</td>
-                    <td>@item.NegotiatedValue</td>
+                    <td>@item.QuantityTraded.ToString("N")</td>
+                    <td>@item.NegotiatedValue.ToString("C2")</td>
                 </tr>
             }
         }
@@ -47,7 +47,9 @@
         $(document).ready(function () {
             $('#contratos').DataTable({
                 "language": {
-                    "url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Portuguese-Brasil.json"
+                    "url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Portuguese-Brasil.json",
+                    "decimal": ",",
+                    "thousands": "."
                 }
             });
 

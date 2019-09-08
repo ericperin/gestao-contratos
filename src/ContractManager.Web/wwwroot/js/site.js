@@ -1,1 +1,1 @@
-﻿$('input[type="datetime-local"]').attr('type', 'text');
+﻿//$('input[type="datetime-local"]').attr('type', 'text');

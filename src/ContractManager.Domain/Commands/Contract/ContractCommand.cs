@@ -12,7 +12,7 @@ namespace ContractManager.Domain.Commands.Contract
     {
         public Guid Id { get; set; }
 
-        [Required, Display(Name = "Cliente")]
+        [Display(Name = "Cliente")]
         public string ClientName { get; set; }
 
         [Display(Name = "Tipo")]
@@ -25,7 +25,10 @@ namespace ContractManager.Domain.Commands.Contract
         public decimal NegotiatedValue { get; set; }
 
         [Display(Name = "Mês/Ano do ínicio do contrato")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/yyyy}")]
         public DateTime StartedAt { get; set; }
+
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/yyyy}")]
         public DateTime FinishedAt => StartedAt.AddMonths(Duration);
 
         [Display(Name = "Duração em meses do contrato")]
@@ -41,8 +44,7 @@ namespace ContractManager.Domain.Commands.Contract
         public virtual bool IsValid()
         {
             var validation = new ContractValidation();
-            validation.ValidateQuantity();
-            validation.ValidatePrice();
+            validation.ValidateDomain();
 
             ValidationResult = validation.Validate(this);
             return ValidationResult.IsValid;

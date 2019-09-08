@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace ContractManager.Domain.Entities
 {
@@ -18,7 +19,11 @@ namespace ContractManager.Domain.Entities
         }
 
         public Guid Id { get; set; }
+
+        [Display(Name = "Removido em")]
         public DateTime? DeletedAt { get; set; }
+
+        [Display(Name = "Criado em")]
         public DateTime CreatedAt { get; set; }
     }
 }

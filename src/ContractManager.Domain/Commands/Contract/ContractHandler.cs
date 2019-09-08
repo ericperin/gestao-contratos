@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,44 +15,55 @@ namespace ContractManager.Domain.Commands.Contract
     {
         private readonly IMediator _mediator;
         private readonly IContractRepository _ContractRepository;
+        private readonly Result _result;
 
-        public ContractHandler(IMediator mediator,
-                       IContractRepository ContractRepository)
+        public ContractHandler(IMediator mediator, IContractRepository ContractRepository)
         {
             _mediator = mediator;
             _ContractRepository = ContractRepository;
+            _result = new Result();
         }
 
-        private IEnumerable<string> GetErrors(ContractCommand request) =>
-            request.ValidationResult.Errors.Select(err => err.ErrorMessage);
+        private IEnumerable<string> GetErrors(ContractCommand request) => request.ValidationResult.Errors.Select(err => err.ErrorMessage);
 
         public async Task<Result> Handle(CreateContractCommand request, CancellationToken cancellationToken)
         {
-            var result = new Result();
-
             if (request.IsValid())
-                if (await _ContractRepository.GetById(request.Id) == null)
+            {
+                var warnings = CheckBalance(request);
+                if (!warnings.Any())
                     await _ContractRepository.Create(
-                        new Entities.Contract(request.ClientName, request.Type, request.QuantityTraded, request.NegotiatedValue, request.StartedAt, request.Duration, request.File, request.CreatedBy)
+                        new Entities.Contract(
+                            request.ClientName,
+                            request.Type,
+                            request.QuantityTraded,
+                            request.NegotiatedValue,
+                            request.StartedAt,
+                            request.Duration,
+                            request.File,
+                            request.CreatedBy)
                     );
                 else
-                {
-                    var message = "The Contract ID already exists.";
+                {// O contrato de venda não pode ser adicionado pois ultrapassou o saldo em alguns meses
+                    var message = "Os seguinte meses estão com saldo insuficiente:";
                     await _mediator.Publish(new Notification(message), cancellationToken);
-                    result.AddError(message);
+                    _result.AddError(message);
+                    foreach (var month in warnings)
+                    {
+                        _result.AddError(month.ToString());
+                    }
                 }
+            }
             else
             {
                 await _mediator.Publish(new Notification(request.ValidationResult), cancellationToken);
-                result.AddErrors(GetErrors(request));
+                _result.AddErrors(GetErrors(request));
             }
-            return result;
+            return _result;
         }
 
         public async Task<Result> Handle(UpdateContractCommand request, CancellationToken cancellationToken)
         {
-            var result = new Result();
-
             if (request.IsValid())
             {
                 var contract = await _ContractRepository.GetById(request.Id);
@@ -69,40 +81,55 @@ namespace ContractManager.Domain.Commands.Contract
                 }
                 else
                 {
-                    var message = "The contract cannot be found.";
+                    var message = "O contrato não foi encontrado.";
                     await _mediator.Publish(new Notification(message), cancellationToken);
-                    result.AddError(message);
+                    _result.AddError(message);
                 }
             }
             else
             {
                 await _mediator.Publish(new Notification(request.ValidationResult), cancellationToken);
-                result.AddErrors(GetErrors(request));
+                _result.AddErrors(GetErrors(request));
             }
-            return result;
+            return _result;
         }
-
 
         public async Task<Result> Handle(DeleteContractCommand request, CancellationToken cancellationToken)
         {
-            var result = new Result();
-
             if (request.IsValid())
             {
-                var Contract = await _ContractRepository.GetById(request.Id);
-                if (Contract != null)
-                    await _ContractRepository.Delete(Contract);
-                else
-                {
-                    var message = "The Contract cannot be found.";
-                    await _mediator.Publish(new Notification(message), cancellationToken);
-                    result.AddError(message);
-                }
+                await _ContractRepository.Delete(request.Id);
             }
             else
             {
                 await _mediator.Publish(new Notification(request.ValidationResult), cancellationToken);
-                result.AddErrors(GetErrors(request));
+                _result.AddErrors(GetErrors(request));
+            }
+
+            return _result;
+        }
+
+        /// <summary>
+        /// Um contrato de venda só pode ser adicionado se a quantidade total disponível para venda 
+        /// (contratos de compra - contratos de venda) para cada um dos meses for igual ou superior 
+        /// em cada um dos meses do novo contrato.
+        /// </summary>
+        private IDictionary<string, string> CheckBalance(CreateContractCommand contract)
+        {
+            var result = new Dictionary<string, string>();
+            if (contract.Type == Enums.ETypeOfContract.Compra) return result;
+
+            for (DateTime month = contract.StartedAt; contract.FinishedAt.CompareTo(month) > 0; month = month.AddMonths(1))
+            {
+                var contracts = _ContractRepository.Filter(x => x.StartedAt <= month && month <= x.FinishedAt);
+                var contratosCompra = contracts.Where(x => x.Type == Enums.ETypeOfContract.Compra).Sum(x => x.QuantityTraded);
+                var contratosVenda = contracts.Where(x => x.Type == Enums.ETypeOfContract.Venda).Sum(x => x.QuantityTraded);
+
+                var totalDisponivelParaVenda = contratosCompra - contratosVenda;
+                if (totalDisponivelParaVenda < contract.QuantityTraded)
+                {// Se a quantidade total disponível para venda para cada um dos meses for menor em cada um dos meses
+                    result.Add(month.ToString("MM/yyyy"), $"Saldo: {totalDisponivelParaVenda.ToString("C2")}");
+                }
             }
 
             return result;

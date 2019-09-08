@@ -9,10 +9,8 @@ namespace ContractManager.Domain.Notifications
     {
         public string Message { get; private set; }
 
-        public Notification(string message) =>
-            Message = message;
+        public Notification(string message) => Message = message;
 
-        public Notification(ValidationResult result) =>
-            Message = string.Join(Environment.NewLine, result.Errors?.Select(x => x.ErrorMessage));
+        public Notification(ValidationResult result) => Message = string.Join(Environment.NewLine, result.Errors?.Select(x => x.ErrorMessage));
     }
 }

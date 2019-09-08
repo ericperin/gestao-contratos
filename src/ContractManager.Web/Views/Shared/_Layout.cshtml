@@ -22,7 +22,7 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">ContractManager.Web</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Gestão de Contratos de Energia</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -31,13 +31,10 @@
                     <partial name="_LoginPartial" />
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Contracts" asp-action="Index">Contratos</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Contracts" asp-action="Index">Contracts</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacidade</a>
                         </li>
                     </ul>
                 </div>
@@ -46,14 +43,15 @@
     </header>
     <div class="container">
         <partial name="_CookieConsentPartial" />
+        <partial name="_Alerts" />
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
     <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2019 - ContractManager.Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        <div class="container text-center">
+            &copy; 2019 - ePerin
         </div>
     </footer>
 
@@ -78,6 +76,7 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
 
     <script src="~/lib/jquery-mask/jquery.mask.min.js"></script>
+    <script src="~/lib/bootbox.all.min.js"></script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>

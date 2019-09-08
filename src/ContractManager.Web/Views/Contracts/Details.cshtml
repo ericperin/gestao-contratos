@@ -32,13 +32,13 @@
             @Html.DisplayNameFor(model => model.QuantityTraded)
         </dt>
         <dd class="col-sm-9">
-            @Html.DisplayFor(model => model.QuantityTraded)
+            @Model.QuantityTraded.ToString("N")
         </dd>
         <dt class="col-sm-3">
             @Html.DisplayNameFor(model => model.NegotiatedValue)
         </dt>
         <dd class="col-sm-9">
-            @Html.DisplayFor(model => model.NegotiatedValue)
+            @Model.NegotiatedValue.ToString("C2")
         </dd>
         <dt class="col-sm-3">
             @Html.DisplayNameFor(model => model.StartedAt)
@@ -57,12 +57,6 @@
         </dt>
         <dd class="col-sm-9">
             <a target="_blank" asp-action="PDF" asp-route-id="@Model.Id">Visualizar PDF</a>
-        </dd>
-        <dt class="col-sm-3">
-            @Html.DisplayNameFor(model => model.CreatedBy)
-        </dt>
-        <dd class="col-sm-9">
-            @Html.DisplayFor(model => model.CreatedBy)
         </dd>
         <dt class="col-sm-3">
             @Html.DisplayNameFor(model => model.CreatedAt)
@@ -84,7 +78,9 @@
                         request.setRequestHeader("RequestVerificationToken", $("[name='__RequestVerificationToken']").val());
                     },
                     success: function (result) {
-                        window.location.href = "/contracts";
+                        bootbox.alert(result, function () {
+                            window.location.href = "/contracts";
+                        });
                     }
                 });
             });

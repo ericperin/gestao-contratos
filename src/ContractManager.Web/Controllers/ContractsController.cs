@@ -56,16 +56,19 @@ namespace ContractManager.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                using (var memoryStream = new MemoryStream())
+                if (pdf != null)
                 {
-                    await pdf.CopyToAsync(memoryStream);
-                    request.File = memoryStream.ToArray();
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        await pdf.CopyToAsync(memoryStream);
+                        request.File = memoryStream.ToArray();
+                    }
                 }
                 request.CreatedBy = new Guid(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
                 var result = await _mediator.Send(request);
 
-                return Result(request, result);
+                return Result(request, result, "gravado");
             }
             return View(request);
         }
@@ -83,15 +86,23 @@ namespace ContractManager.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, UpdateContractCommand request)
+        public async Task<IActionResult> Edit(Guid id, UpdateContractCommand request, IFormFile pdf)
         {
             if (id != request.Id) return NotFound();
 
             if (ModelState.IsValid)
             {
+                if (pdf != null)
+                {
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        await pdf.CopyToAsync(memoryStream);
+                        request.File = memoryStream.ToArray();
+                    }
+                }
                 var result = await _mediator.Send(request);
 
-                return Result(request, result);
+                return Result(request, result, "alterado");
             }
             return View(request);
         }
@@ -105,7 +116,7 @@ namespace ContractManager.Web.Controllers
 
             if (result.HasErrors) return BadRequest(string.Join(", ", result.Errors));
 
-            return Ok();
+            return Ok("Contrato removido com sucesso!");
         }
 
         public async Task<ActionResult> PDF(Guid id)
@@ -115,13 +126,15 @@ namespace ContractManager.Web.Controllers
             return new FileContentResult(contract.File, "application/pdf");
         }
 
-        private IActionResult Result(ContractCommand request, Result result)
+        private IActionResult Result(ContractCommand request, Result result, string alert)
         {
             if (result.HasErrors)
             {
                 result.Errors.ToList().ForEach(err => ModelState.AddModelError(string.Empty, err));
                 return View(request);
             }
+
+            TempData["Alert"] = $"Contrato {alert} com sucesso!";
             return RedirectToAction(nameof(Index));
         }
     }

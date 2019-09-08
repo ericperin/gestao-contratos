@@ -5,15 +5,12 @@ namespace ContractManager.Domain.Validations
 {
     public class ContractValidation : AbstractValidator<ContractCommand>
     {
-        public void ValidateQuantity()
+        public void ValidateDomain()
         {
-            RuleFor(p => p.QuantityTraded)
-                .GreaterThan(0).WithMessage("The Quantity must be greater than zero");
-        }
-        public void ValidatePrice()
-        {
-            RuleFor(p => p.NegotiatedValue)
-                .GreaterThan(0).WithMessage("The Price must be greater than zero");
+            RuleFor(p => p.ClientName).NotEmpty().NotNull().WithMessage("O nome do cliente é obrigatório");
+            RuleFor(p => p.QuantityTraded).GreaterThan(0).WithMessage("A quantidade deve ser maior que 0");
+            RuleFor(p => p.NegotiatedValue).GreaterThan(0).WithMessage("O preço deve ser maior que 0");
+            RuleFor(p => p.File).NotEmpty().WithMessage("O arquivo é obrigatório");
         }
     }
 }
