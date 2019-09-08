@@ -39,6 +39,14 @@ namespace ContractManager.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
+        public async Task SoftDelete(Guid id)
+        {
+            var entityToDelete = _context.Set<TEntity>().SingleOrDefault(e => e.Id == id);
+            entityToDelete.DeletedAt = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+        }
+
         public async Task Edit(TEntity entity)
         {
             var editedEntity = _context.Set<TEntity>().SingleOrDefault(e => e.Id == entity.Id);
@@ -61,5 +69,6 @@ namespace ContractManager.Data.Repositories
         {
             return _context.Set<TEntity>().Where(predicate);
         }
+
     }
 }

@@ -71,10 +71,11 @@
     <script type="text/javascript">
         $(function () {
             $(".delete").click(function () {
+                let id = $(this).data("id");
                 bootbox.confirm("Tem certeza que deseja remover este contrato?", function (ok) {
                     if (ok) {
                         $.ajax({
-                            url: "/contracts/delete/" + $(this).data("id"),
+                            url: "/contracts/delete/" + id,
                             type: "POST",
                             beforeSend: function (request) {
                                 request.setRequestHeader("RequestVerificationToken", $("[name='__RequestVerificationToken']").val());

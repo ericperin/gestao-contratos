@@ -98,7 +98,7 @@ namespace ContractManager.Domain.Commands.Contract
         {
             if (request.IsValid())
             {
-                await _ContractRepository.Delete(request.Id);
+                await _ContractRepository.SoftDelete(request.Id);
             }
             else
             {
