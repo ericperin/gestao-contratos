@@ -13,7 +13,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContractManager.Web", "src\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContractManager.IoC", "src\ContractManager.IoC\ContractManager.IoC.csproj", "{C1B90500-052F-4567-942E-E581BC4E367A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContractManager.Application", "src\ContractManager.Application\ContractManager.Application.csproj", "{DBEF300E-C33D-4E7C-8D73-9BBDBE0826FB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContractManager.Application", "src\ContractManager.Application\ContractManager.Application.csproj", "{DBEF300E-C33D-4E7C-8D73-9BBDBE0826FB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "0 - Apresentation", "0 - Apresentation", "{B1F2F908-44C5-4FD2-8005-4D8E4F807FFA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 - Apllication", "1 - Apllication", "{F03867D0-1713-4FF3-9B17-0EF821F024F4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 - Domain", "2 - Domain", "{340BA252-C314-4C88-87AB-DD171D670E1C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3 - Infra", "3 - Infra", "{6AA7D901-97AF-4B3F-AA8D-DE710619D4F1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4 - Tests", "4 - Tests", "{91477103-7D53-4611-B0DA-3BF483503504}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -100,6 +110,14 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{767B176B-E542-434D-B11F-072A7B4AC920} = {340BA252-C314-4C88-87AB-DD171D670E1C}
+		{1ECDD396-4A00-442B-980B-D41227A41625} = {91477103-7D53-4611-B0DA-3BF483503504}
+		{EDF033E5-ECE7-4444-B625-61B437F787BD} = {6AA7D901-97AF-4B3F-AA8D-DE710619D4F1}
+		{D2BCAC60-B79F-43D3-BD4C-98D981EC77DB} = {B1F2F908-44C5-4FD2-8005-4D8E4F807FFA}
+		{C1B90500-052F-4567-942E-E581BC4E367A} = {6AA7D901-97AF-4B3F-AA8D-DE710619D4F1}
+		{DBEF300E-C33D-4E7C-8D73-9BBDBE0826FB} = {F03867D0-1713-4FF3-9B17-0EF821F024F4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4D7C5135-EC4B-45C8-AE34-ED3A3426C267}
